@@ -1,68 +1,64 @@
 import React, { Component } from "react";
+import "./index.scss";
 
+const styleObject = fillPercentage => ({
+  width: fillPercentage + "%",
+  display: fillPercentage ? "flex" : "none"
+});
 export default class ProgressBar extends Component {
-
-  firstBar = (remainingPercentage) => {
-    let fillPercentage
-    let limit = 40
-    if(remainingPercentage > limit){
-      fillPercentage = limit
-      remainingPercentage -= limit
-    } else{
-      fillPercentage = remainingPercentage
-      remainingPercentage = 0
+  emptyBar = () => {
+    return <div className={"progress-bar progress-bar-empty"}>0%</div>;
+  };
+  renderBars = remainingPercentage => {
+    let progressBar = [];
+    let fillPercentage;
+    let limit = 40;
+    if (remainingPercentage > limit) {
+      fillPercentage = limit;
+      remainingPercentage -= limit;
+      console.log("remain", remainingPercentage);
+    } else {
+      fillPercentage = remainingPercentage;
+      remainingPercentage = 0;
+      console.log("remain", remainingPercentage, fillPercentage);
     }
-    return (
+
+    progressBar.push(
       <div
-        className="progress-bar progress-bar-success"
+        className="progress-bar progress-bar-success progress-bar-striped"
         role="progressbar"
-        style={{width:{fillPercentage}+'%'}}
+        style={styleObject(fillPercentage)}
       >
-        Free Spac
+        {fillPercentage}%
       </div>
     );
-  };
-
-  secondBar = (remainingPercentage) => {
-    let fillPercentage
-    const limit = 10
-    if(remainingPercentage > limit){
-      fillPercentage = limit
-      remainingPercentage -= limit
-    } else{
-      fillPercentage = remainingPercentage
-      remainingPercentage = 0
+    const sLimit = 10;
+    if (remainingPercentage > sLimit) {
+      fillPercentage = sLimit;
+      remainingPercentage -= sLimit;
+    } else {
+      fillPercentage = remainingPercentage;
+      remainingPercentage = 0;
     }
-    return (
+    progressBar.push(
       <div
-      className="progress-bar progress-bar-warning"
-      role="progressbar"
-      style={{width:{fillPercentage}+'%'}}
-    >
-      Warning
-    </div>
+        className="progress-bar progress-bar-warning progress-bar-striped"
+        role="progressbar"
+        style={styleObject(fillPercentage)}
+      >
+        {fillPercentage}%
+      </div>
     );
-  };
-
-  thirdBar = (remainingPercentage) => {
-    let fillPercentage
-    const limit = 10
-    if(limit && remainingPercentage > limit){
-      fillPercentage = limit
-      remainingPercentage -= limit
-    } else{
-      fillPercentage = remainingPercentage
-      remainingPercentage = 0
-    }
-    return (
+    progressBar.push(
       <div
-      className="progress-bar progress-bar-danger"
-      role="progressbar"
-      style={{width:{fillPercentage}+'%'}}
-    >
-      Danger
-    </div>
+        className="progress-bar progress-bar-danger progress-bar-striped"
+        role="progressbar"
+        style={styleObject(remainingPercentage)}
+      >
+        {remainingPercentage}%
+      </div>
     );
+    return progressBar;
   };
 
   render() {
@@ -70,10 +66,8 @@ export default class ProgressBar extends Component {
 
     return (
       <div className="progress">
-        {this.firstBar(completionValue)}
-        {this.secondBar(completionValue)}
-        {this.thirdBar(completionValue)}
-
+        {completionValue === 0 && this.emptyBar()}
+        {completionValue !== 0 && this.renderBars(completionValue)}
       </div>
     );
   }
